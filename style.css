@@ -1,0 +1,68 @@
+:root {
+  --bg: #f5f6f8;
+  --card: #ffffff;
+  --text: #1c1f24;
+  --muted: #6b7280;
+  --ok: #16a34a;
+  --err: #dc2626;
+  --warn: #d97706;
+  --accent: #2563eb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 24px 16px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header, main { max-width: 960px; margin: 0 auto; }
+
+#login { margin: 0 0 4px; color: var(--muted); font-weight: 500; }
+h1 { margin: 0 0 16px; font-size: 1.5rem; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
+
+#cancel {
+  padding: 8px 14px;
+  border: 1px solid var(--err);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--err);
+  cursor: pointer;
+  font: inherit;
+}
+#cancel:disabled { opacity: .4; cursor: default; }
+
+#summary { padding: 6px 12px; border-radius: 8px; background: #e5e7eb; }
+#summary[data-state="success"] { background: #dcfce7; color: var(--ok); }
+#summary[data-state="partial"] { background: #fef3c7; color: var(--warn); }
+#summary[data-state="error"] { background: #fee2e2; color: var(--err); }
+#summary[data-state="aborted"] { background: #e0e7ff; color: #4338ca; }
+
+#users {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+article {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+}
+article[data-state="success"] { border-left-color: var(--ok); }
+article[data-state="error"] { border-left-color: var(--err); }
+article[data-state="aborted"] { border-left-color: #6366f1; }
+
+article .name { margin: 0 0 10px; font-size: 1.15rem; }
+article .row { margin: 4px 0; }
+article .label { color: var(--muted); }
+article .email { color: var(--accent); word-break: break-all; }
+article .message { color: var(--muted); }
+article[data-state="error"] .message { color: var(--err); font-weight: 600; }
