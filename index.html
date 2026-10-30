@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fetch API: карточки пользователей</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h4 id="login">mkkey22</h4>
+    <h1>Параллельная загрузка карточек</h1>
+    <div class="controls">
+      <button id="cancel" type="button">Отменить запросы</button>
+      <output id="summary" data-state="loading">Загрузка...</output>
+    </div>
+  </header>
+
+  <main>
+    <section id="users"></section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
