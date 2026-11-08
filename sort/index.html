@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>sort</title>
+</head>
+<body>
+  <h4>mkkey22</h4>
+  <script>
+    // Адрес вида https://abc.def/ghi?[55,33,44]: массив находится после знака вопроса
+    const raw = decodeURIComponent(location.search.slice(1));
+    let arr;
+    try {
+      arr = JSON.parse(raw);
+    } catch (e) {
+      arr = raw.replace(/[\[\]\s]/g, '').split(',').filter(Boolean);
+    }
+    // Сортировка по возрастанию как последовательности чисел
+    const sorted = arr.map(Number).sort((a, b) => a - b);
+    document.title = sorted.toString();
+  </script>
+</body>
+</html>
