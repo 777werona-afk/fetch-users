@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>htmx + Handlebars: пользователи dummyjson</title>
+  <!-- htmx 2 по умолчанию отправляет запросы только на свой домен: разрешаем внешний API -->
+  <meta name="htmx-config" content='{"selfRequestsOnly": false}'>
+  <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+  <script src="https://unpkg.com/htmx-ext-client-side-templates@2.0.0/client-side-templates.js"></script>
+  <script src="https://unpkg.com/handlebars@4.7.8/dist/handlebars.min.js"></script>
+  <style>
+    :root { --bg: #f5f6f8; --card: #fff; --text: #1c1f24; --muted: #6b7280; --accent: #2563eb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px 16px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); }
+    header, main { max-width: 960px; margin: 0 auto; }
+    h4 { margin: 0 0 4px; color: var(--muted); font-weight: 500; }
+    h1 { margin: 0 0 8px; font-size: 1.5rem; }
+    p.lead { margin: 0 0 16px; color: var(--muted); }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+    button, input { font: inherit; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; }
+    button { background: var(--accent); color: #fff; border-color: var(--accent); cursor: pointer; }
+    input { min-width: 240px; background: #fff; }
+    .htmx-indicator { display: none; color: var(--muted); }
+    .htmx-request .htmx-indicator, .htmx-request.htmx-indicator { display: inline; }
+    .total { margin: 0 0 12px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    article { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    article img { width: 56px; height: 56px; border-radius: 50%; background: #e5e7eb; }
+    article h2 { margin: 8px 0; font-size: 1.1rem; }
+    article p { margin: 4px 0; }
+    article a { color: var(--accent); word-break: break-all; }
+    .label { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <h4>mkkey22</h4>
+    <h1>Пользователи dummyjson без своего JavaScript</h1>
+    <p class="lead">Запросы делает htmx по атрибутам в разметке, JSON превращается в HTML шаблоном Handlebars.</p>
+
+    <!-- Расширение client-side-templates: ответ-JSON прогоняется через шаблон и вставляется в #users -->
+    <div class="controls" hx-ext="client-side-templates">
+      <button type="button"
+              hx-get="https://dummyjson.com/users?limit=12&select=firstName,lastName,email,image,address,company"
+              hx-target="#users"
+              hx-indicator="#loading"
+              handlebars-template="users-tpl">Загрузить пользователей</button>
+
+      <input type="search" name="q" placeholder="Поиск по имени, например John"
+             hx-get="https://dummyjson.com/users/search?limit=12&select=firstName,lastName,email,image,address,company"
+             hx-trigger="input changed delay:400ms, search"
+             hx-target="#users"
+             hx-indicator="#loading"
+             handlebars-template="users-tpl">
+
+      <span id="loading" class="htmx-indicator">Загрузка…</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="users">
+      <p class="total">Нажмите «Загрузить пользователей» или начните вводить имя.</p>
+    </section>
+  </main>
+
+  <!-- Шаблон Handlebars: {{...}} экранирует данные, поэтому вставка безопасна -->
+  <template id="users-tpl">
+    <p class="total">Найдено: {{total}}, показано: {{users.length}}</p>
+    <div class="grid">
+      {{#each users}}
+      <article data-id="{{id}}">
+        <img src="{{image}}" alt="" loading="lazy">
+        <h2>{{firstName}} {{lastName}}</h2>
+        <p><span class="label">Почта:</span> <a href="mailto:{{email}}">{{email}}</a></p>
+        <p><span class="label">Город:</span> {{address.city}}</p>
+        <p><span class="label">Компания:</span> {{company.name}}</p>
+      </article>
+      {{else}}
+      <p>Никого не нашлось.</p>
+      {{/each}}
+    </div>
+  </template>
+</body>
+</html>
